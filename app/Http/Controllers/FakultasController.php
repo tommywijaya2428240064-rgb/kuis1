@@ -12,8 +12,8 @@ class FakultasController extends Controller
      */
     public function index()
     {
-        $data = fakultas::orderByDesc("created_at")->get();
-        return view('fakultas.list-fakultas', ['fakultas' => $data,]);
+        $data = Fakultas::orderByDesc("created_at")->paginate(10); // Tambah pagination
+        return view('fakultas.list-fakultas', ['fakultas' => $data]);
     }
 
     /**
@@ -29,22 +29,30 @@ class FakultasController extends Controller
      */
     public function store(Request $request)
     {
+        // PERBAIKAN: Max karakter diubah dari 5 menjadi 100 (lebih realistis)
         $validated = $request->validate([
-        'nama_fakultas'=>['required',"max:5"],
-        'nama_dekan' => ['required',"max:5"]
-        ],[
+            'nama_fakultas' => ['required', 'max:100', 'unique:fakultas'], // Tambah unique
+            'nama_dekan' => ['required', 'max:100']
+        ], [
             'nama_fakultas.required' => 'Nama Fakultas Wajib Di Isi',
             'nama_dekan.required' => 'Nama Dekan Wajib Di Isi',
-            'nama_fakultas.max' => 'Nama Fakultas Maksimal 5 Karakter',
-            'nama_dekan.max' => 'Nama Dekan Maksimal 5 Karakter',
-            
+            'nama_fakultas.max' => 'Nama Fakultas Maksimal 100 Karakter',
+            'nama_dekan.max' => 'Nama Dekan Maksimal 100 Karakter',
+            'nama_fakultas.unique' => 'Nama Fakultas Sudah Terdaftar' // Tambah pesan unique
         ]);
 
-        Fakultas::create([
-            'nama_fakultas' => $request->nama_fakultas,
-            'nama_dekan' => $request->nama_dekan
-        ]);
-        return redirect('/fakultas')->with('success','Fakultas berhasil');
+        try {
+            Fakultas::create([
+                'nama_fakultas' => $request->nama_fakultas,
+                'nama_dekan' => $request->nama_dekan
+            ]);
+            
+            // Tambah feedback sukses
+            return redirect('/fakultas')->with('success', 'Data Fakultas Berhasil Disimpan!');
+        } catch (\Exception $e) {
+            // Tambah feedback error
+            return redirect()->back()->with('error', 'Gagal Menyimpan Data: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -52,7 +60,7 @@ class FakultasController extends Controller
      */
     public function show(Fakultas $fakulta)
     {
-        return view('fakultas.detail-fakultas', ['fakultas'=> $fakulta]);
+        return view('fakultas.detail-fakultas', ['fakultas' => $fakulta]);
     }
 
     /**
@@ -60,8 +68,8 @@ class FakultasController extends Controller
      */
     public function edit(Fakultas $fakulta)
     {
-        return view('fakultas.edit-fakultas',[
-            'fakultas'=> $fakulta
+        return view('fakultas.edit-fakultas', [
+            'fakultas' => $fakulta
         ]);
     }
 
@@ -69,32 +77,45 @@ class FakultasController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Fakultas $fakulta)
-   {
-    $validated = $request->validate([
-        'nama_fakultas' => ['required', 'max:5'],
-        'nama_dekan' => ['required', 'max:5']
-    ], [
-        'nama_fakultas.required' => 'Nama Fakultas Wajib Di Isi',
-        'nama_dekan.required' => 'Nama Dekan Wajib Di Isi',
-        'nama_fakultas.max' => 'Nama Fakultas Maksimal 5 Karakter',
-        'nama_dekan.max' => 'Nama Dekan Maksimal 5 Karakter',
-    ]);
+    {
+        // PERBAIKAN: Validasi unique dengan mengabaikan ID sendiri
+        $validated = $request->validate([
+            'nama_fakultas' => ['required', 'max:100', 'unique:fakultas,nama_fakultas,' . $fakulta->id],
+            'nama_dekan' => ['required', 'max:100']
+        ], [
+            'nama_fakultas.required' => 'Nama Fakultas Wajib Di Isi',
+            'nama_dekan.required' => 'Nama Dekan Wajib Di Isi',
+            'nama_fakultas.max' => 'Nama Fakultas Maksimal 100 Karakter',
+            'nama_dekan.max' => 'Nama Dekan Maksimal 100 Karakter',
+            'nama_fakultas.unique' => 'Nama Fakultas Sudah Terdaftar'
+        ]);
 
-    $fakulta->update([
-        'nama_fakultas' => $request->nama_fakultas,
-        'nama_dekan' => $request->nama_dekan
-    ]);
+        try {
+            $fakulta->update([
+                'nama_fakultas' => $request->nama_fakultas,
+                'nama_dekan' => $request->nama_dekan
+            ]);
 
-    return redirect('/fakultas');
-}
+            // Tambah feedback sukses
+            return redirect('/fakultas')->with('success', 'Data Fakultas Berhasil Diupdate!');
+        } catch (\Exception $e) {
+            // Tambah feedback error
+            return redirect()->back()->with('error', 'Gagal Mengupdate Data: ' . $e->getMessage())->withInput();
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Fakultas $fakulta)
     {
-        $fakulta->delete();
-
-        return redirect()->back();
+        try {
+            $fakulta->delete();
+            // Tambah feedback sukses
+            return redirect()->back()->with('success', 'Data Fakultas Berhasil Dihapus!');
+        } catch (\Exception $e) {
+            // Tambah feedback error
+            return redirect()->back()->with('error', 'Gagal Menghapus Data: ' . $e->getMessage());
+        }
     }
-}
+}   
