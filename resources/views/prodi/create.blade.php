@@ -32,35 +32,24 @@
                         </div>
                     @endif
 
-
                     {{-- FORM --}}
                     <form action="{{ route('prodi.store') }}" method="POST">
                         @csrf
-
-                        {{-- Fakultas --}}
                         <div class="mb-3">
-                            <label class="form-label">Fakultas</label>
-
-                            <select name="fakultas_id"
-                                    class="form-select @error('fakultas_id') is-invalid @enderror"
-                                    required>
-
-                                <option value="">Pilih Fakultas</option>
-
-                                @foreach($fakultas as $f)
-                                    <option value="{{ $f->id }}"
-                                        {{ old('fakultas_id') == $f->id ? 'selected' : '' }}>
-                                        {{ $f->nama_fakultas }}
-                                    </option>
-                                @endforeach
-
+                            <label for="fakultas" class="form-label">
+                                Fakultas
+                            </label>
+                            <select class ="form-select" name="fakultas_id" id="fakultas">
+                                <option values="">pilih Fakultas</option>
+                                @foreach ($listfakultas as $fakultas)
+                                   <option value="{{ $fakultas->id }}">
+                                       {{$fakultas->nama_fakultas }}
+                                   </option>
+                                @endforeach       
                             </select>
+                        <div>                
 
-                            @error('fakultas_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
+                       
 
                         {{-- Alias Prodi --}}
                         <div class="mb-3">
