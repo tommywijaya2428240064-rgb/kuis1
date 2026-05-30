@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Prodi extends Model
-{
+{ 
     protected $fillable = [
         'nama_prodi',
         'nama_kaprodi',
         'alias_prodi',
-        'fakultas_id'
+        'fakultas_id',
+        "photo_kaprodi"
     ];
 
     public function fakultas(): BelongsTo

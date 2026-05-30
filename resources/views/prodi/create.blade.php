@@ -33,7 +33,7 @@
                     @endif
 
                     {{-- FORM --}}
-                    <form action="{{ route('prodi.store') }}" method="POST">
+                    <form action="{{ route('prodi.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="fakultas" class="form-label">
@@ -86,7 +86,7 @@
                         {{-- Kaprodi --}}
                         <div class="mb-3">
                             <label class="form-label">Ketua Program Studi</label>
-
+                                  
                             <input type="text"
                                    name="nama_kaprodi"
                                    class="form-control @error('nama_kaprodi') is-invalid @enderror"
@@ -97,6 +97,20 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                         
+                        <div class="mb-3">
+                            <label class="photo_kaprodi">Nama Program Studi</label>
+
+                            <input type="file"
+                                   name="photo_kaprodi"
+                                   id="photo_kaprodi"
+                                   accept='image/*'
+                                   class="form-control @error('nama_prodi') is-invalid @enderror"
+                                   value="{{ old('nama_prodi') }}"
+                                   placeholder="pilih photo kaprodi">
+
+                        </div>
+
 
 
                         {{-- BUTTON --}}
