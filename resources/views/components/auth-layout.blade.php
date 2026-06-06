@@ -44,66 +44,7 @@
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-                <i class="bi bi-mortarboard-fill me-2"></i>
-                Sistem Informasi Fakultas & Prodi
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('fakultas') ? 'active fw-bold' : '' }}"
-                           href="{{ url('/fakultas') }}">
-                            <i class="bi bi-building me-1"></i>
-                            Fakultas
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('fakultas/create') ? 'active fw-bold' : '' }}"
-                           href="{{ url('/fakultas/create') }}">
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Tambah Fakultas
-                        </a>
-                    </li>
-
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('prodi') ? 'active fw-bold' : '' }}"
-                           href="{{ url('/prodi') }}">
-                            <i class="bi bi-book me-1"></i>
-                            Program Studi
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('prodi/create') ? 'active fw-bold' : '' }}"
-                           href="{{ url('/prodi/create') }}">
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Tambah Prodi
-
-                            
-                        </a>
-                    </li>
-                     
-                    <li class="nav-item">
-                        <form action="/logout" method="post">
-                           @csrf
-                          <button type="submit">Logout</button>
-                        </form>        
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+ 
 
     <!-- Main -->
     <main class="container py-4">
